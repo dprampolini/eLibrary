@@ -17,8 +17,9 @@ namespace eLibrary.WPF.ViewModels
 
         public EditBookViewModel(Book book, ModalNavigationStore modalNavigationStore)
         {
+            ICommand submitCommand = new EditBookCommand(modalNavigationStore);
             ICommand cancelCommand = new CloseModalCommand(modalNavigationStore);
-            BookDetailsFormViewModel = new BookDetailsFormViewModel(null, cancelCommand)
+            BookDetailsFormViewModel = new BookDetailsFormViewModel(submitCommand, cancelCommand)
             {
                 Title = book.Title,
                 Author = book.Author,

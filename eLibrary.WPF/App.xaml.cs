@@ -16,17 +16,22 @@ namespace eLibrary.WPF
     public partial class App : Application
     {
         private readonly ModalNavigationStore _modalNavigationStore;
+        private readonly BooksStore _booksStore;
         private readonly SelectedBookStore _selectedBookStore;
 
         public App()
         {
             _modalNavigationStore = new ModalNavigationStore();
+            _booksStore = new BooksStore();
             _selectedBookStore = new SelectedBookStore();
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            eLibraryViewModel eLibraryViewModel = new eLibraryViewModel(_selectedBookStore, _modalNavigationStore);
+            eLibraryViewModel eLibraryViewModel = new eLibraryViewModel(
+                _booksStore,
+                _selectedBookStore,
+                _modalNavigationStore);
 
             MainWindow = new MainWindow()
             {

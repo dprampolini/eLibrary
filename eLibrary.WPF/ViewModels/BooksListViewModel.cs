@@ -16,6 +16,9 @@ namespace eLibrary.WPF.ViewModels
         private readonly SelectedBookStore _selectedBookStore;
 
         private readonly ObservableCollection<ListingItemViewModel> _listingItemViewModel;
+        private readonly BooksStore _booksStore;
+        private readonly ModalNavigationStore _modalNavigationStore;
+
         //Using an ObservableCollection the UI can immediately update when an item is add or removed
 
         public IEnumerable<ListingItemViewModel> ListingItemViewModel => _listingItemViewModel;
@@ -35,20 +38,34 @@ namespace eLibrary.WPF.ViewModels
             }
         }
 
-        public BooksListViewModel(SelectedBookStore selectedBookStore, ModalNavigationStore modalNavigationStore)
+        public BooksListViewModel(BooksStore booksStore, SelectedBookStore selectedBookStore, ModalNavigationStore modalNavigationStore)
         {
-            this._selectedBookStore = selectedBookStore;
+            _selectedBookStore = selectedBookStore;
             _listingItemViewModel = new ObservableCollection<ListingItemViewModel>();
+            _booksStore = booksStore;
+            _modalNavigationStore = modalNavigationStore;
+            _booksStore.BookAdded += BooksStore_BookAdded;
 
-            AddBook(new Book("Madame Bovary", "Gustave Flaubert", "1856", "Francese"), modalNavigationStore);
-            AddBook(new Book("Dracula", "Bram Stoker", "1897", "Inglese"), modalNavigationStore);
-            AddBook(new Book("L'isola del Tesoro", "Robert Louis Stevenson", "1883", "Inglese"), modalNavigationStore);
+            AddBook(new Book("Madame Bovary", "Gustave Flaubert", "1856", "Francese"));
+            AddBook(new Book("Dracula", "Bram Stoker", "1897", "Inglese"));
+            AddBook(new Book("L'isola del Tesoro", "Robert Louis Stevenson", "1883", "Inglese"));
 
         }
 
-        private void AddBook(Book book, ModalNavigationStore modalNavigationStore)
+        protected override void Dispose()
         {
-            ICommand editCommand = new OpenEditBookCommand(book, modalNavigationStore);
+            _booksStore.BookAdded -= BooksStore_BookAdded;
+            base.Dispose();
+        }
+
+        private void BooksStore_BookAdded(Book book)
+        {
+            AddBook(book);
+        }
+
+        private void AddBook(Book book)
+        {
+            ICommand editCommand = new OpenEditBookCommand(book, _modalNavigationStore);
             _listingItemViewModel.Add(new ListingItemViewModel(book, editCommand));
         }
     }
