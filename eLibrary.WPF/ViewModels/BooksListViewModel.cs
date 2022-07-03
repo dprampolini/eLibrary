@@ -48,6 +48,7 @@ namespace eLibrary.WPF.ViewModels
             //Events subscription
             _booksStore.BookAdded += BooksStore_BookAdded; 
             _booksStore.BookUpdated += BooksStore_BookUpdated;
+            _booksStore.BookDeleted += BooksStore_BookDeleted;
 
             AddBook(new Book(Guid.NewGuid(), "Madame Bovary", "Gustave Flaubert", "1856", "Francese"));
             AddBook(new Book(Guid.NewGuid(), "Dracula", "Bram Stoker", "1897", "Inglese"));
@@ -60,6 +61,7 @@ namespace eLibrary.WPF.ViewModels
             //Unsubscribption to events
             _booksStore.BookAdded -= BooksStore_BookAdded;
             _booksStore.BookUpdated -= BooksStore_BookUpdated;
+            _booksStore.BookDeleted -= BooksStore_BookDeleted;
             base.Dispose();
         }
 
@@ -81,10 +83,27 @@ namespace eLibrary.WPF.ViewModels
             
         }
 
+        private void BooksStore_BookDeleted(Book book)
+        {
+            ListingItemViewModel listingItemViewModel =
+                _listingItemViewModel.FirstOrDefault(y => y.Book.Id == book.Id);
+
+            if (listingItemViewModel != null)
+            {
+                DeleteBook(book);
+            }
+        }
+
         private void AddBook(Book book)
         {
             ListingItemViewModel itemViewModel = new ListingItemViewModel(book, _booksStore, _modalNavigationStore);
             _listingItemViewModel.Add(itemViewModel);
         }
+
+        private void DeleteBook(Book book)
+        {
+            _listingItemViewModel.Remove(_listingItemViewModel.FirstOrDefault(y => y.Book.Id == book.Id));
+        }
+
     }
 }

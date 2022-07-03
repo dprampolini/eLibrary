@@ -19,6 +19,9 @@
         <DataTemplate DataType="{x:Type vms:EditBookViewModel}">
             <views:EditBookView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vms:DeleteBookViewModel}">
+            <views:DeleteBookView />
+        </DataTemplate>
     </Window.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
         <Grid>

@@ -22,6 +22,7 @@ namespace eLibrary.WPF.ViewModels
             Book = book;
 
             EditCommand = new OpenEditBookCommand(this, booksStore, modalNavigationStore);
+            DeleteCommand = new OpenDeleteBookCommand(this, booksStore, modalNavigationStore);
         }
 
         public void Update(Book book)

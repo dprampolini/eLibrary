@@ -11,6 +11,7 @@ namespace eLibrary.WPF.Stores
     {
         public event Action<Book> BookAdded;
         public event Action<Book> BookUpdated;
+        public event Action<Book> BookDeleted;
 
         public async Task Add(Book book)
         {
@@ -20,6 +21,11 @@ namespace eLibrary.WPF.Stores
         public async Task Update(Book book)
         {
             BookUpdated?.Invoke(book);
+        }
+
+        public async Task Delete(Book book)
+        {
+            BookDeleted?.Invoke(book);
         }
     }
 }
