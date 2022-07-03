@@ -28,6 +28,7 @@ namespace eLibrary.WPF.Commands
             BookDetailsFormViewModel formViewModel = _addBookViewModel.BookDetailsFormViewModel;
 
             Book book = new Book(
+                Guid.NewGuid(),
                 formViewModel.Title, 
                 formViewModel.Author, 
                 formViewModel.PublicationDate, 

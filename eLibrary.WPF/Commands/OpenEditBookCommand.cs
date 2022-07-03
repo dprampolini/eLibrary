@@ -11,20 +11,21 @@ namespace eLibrary.WPF.Commands
 {
     public class OpenEditBookCommand : CommandBase
     {
+        private readonly ListingItemViewModel _listingItemViewModel;
+        private readonly BooksStore _booksStore;
         private readonly ModalNavigationStore _modalNavigationStore;
-        private readonly Book _book;
 
-        public OpenEditBookCommand(
-            Book book,
-            ModalNavigationStore modalNavigationStore)
+        public OpenEditBookCommand(ListingItemViewModel listingItemViewModel, BooksStore booksStore, ModalNavigationStore modalNavigationStore)
         {
-            _book = book;
+            _listingItemViewModel = listingItemViewModel;
+            _booksStore = booksStore;
             _modalNavigationStore = modalNavigationStore;
         }
 
         public override void Execute(object parameter)
         {
-            EditBookViewModel editBookViewModel = new EditBookViewModel(_book, _modalNavigationStore);
+            Book book = _listingItemViewModel.Book;
+            EditBookViewModel editBookViewModel = new EditBookViewModel(book, _booksStore, _modalNavigationStore);
             _modalNavigationStore.CurrentViewModel = editBookViewModel;
         }
     }

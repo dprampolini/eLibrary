@@ -44,17 +44,22 @@ namespace eLibrary.WPF.ViewModels
             _listingItemViewModel = new ObservableCollection<ListingItemViewModel>();
             _booksStore = booksStore;
             _modalNavigationStore = modalNavigationStore;
-            _booksStore.BookAdded += BooksStore_BookAdded;
 
-            AddBook(new Book("Madame Bovary", "Gustave Flaubert", "1856", "Francese"));
-            AddBook(new Book("Dracula", "Bram Stoker", "1897", "Inglese"));
-            AddBook(new Book("L'isola del Tesoro", "Robert Louis Stevenson", "1883", "Inglese"));
+            //Events subscription
+            _booksStore.BookAdded += BooksStore_BookAdded; 
+            _booksStore.BookUpdated += BooksStore_BookUpdated;
+
+            AddBook(new Book(Guid.NewGuid(), "Madame Bovary", "Gustave Flaubert", "1856", "Francese"));
+            AddBook(new Book(Guid.NewGuid(), "Dracula", "Bram Stoker", "1897", "Inglese"));
+            AddBook(new Book(Guid.NewGuid(), "L'isola del Tesoro", "Robert Louis Stevenson", "1883", "Inglese"));
 
         }
 
         protected override void Dispose()
         {
+            //Unsubscribption to events
             _booksStore.BookAdded -= BooksStore_BookAdded;
+            _booksStore.BookUpdated -= BooksStore_BookUpdated;
             base.Dispose();
         }
 
@@ -63,10 +68,23 @@ namespace eLibrary.WPF.ViewModels
             AddBook(book);
         }
 
+        private void BooksStore_BookUpdated(Book book)
+        {
+            //Assign to this local variable the first Book with the id of the input id
+            ListingItemViewModel listingItemViewModel =
+                _listingItemViewModel.FirstOrDefault(y => y.Book.Id == book.Id);
+
+            if (listingItemViewModel != null)
+            {
+                listingItemViewModel.Update(book);
+            }
+            
+        }
+
         private void AddBook(Book book)
         {
-            ICommand editCommand = new OpenEditBookCommand(book, _modalNavigationStore);
-            _listingItemViewModel.Add(new ListingItemViewModel(book, editCommand));
+            ListingItemViewModel itemViewModel = new ListingItemViewModel(book, _booksStore, _modalNavigationStore);
+            _listingItemViewModel.Add(itemViewModel);
         }
     }
 }

@@ -13,11 +13,14 @@ namespace eLibrary.WPF.ViewModels
 
     public class EditBookViewModel : ViewModelBase
     {
+        public Guid BookId { get; }
         public BookDetailsFormViewModel BookDetailsFormViewModel { get; }
 
-        public EditBookViewModel(Book book, ModalNavigationStore modalNavigationStore)
+        public EditBookViewModel(Book book, BooksStore bookStore,ModalNavigationStore modalNavigationStore)
         {
-            ICommand submitCommand = new EditBookCommand(modalNavigationStore);
+            BookId = book.Id;
+
+            ICommand submitCommand = new EditBookCommand(this, bookStore, modalNavigationStore);
             ICommand cancelCommand = new CloseModalCommand(modalNavigationStore);
             BookDetailsFormViewModel = new BookDetailsFormViewModel(submitCommand, cancelCommand)
             {

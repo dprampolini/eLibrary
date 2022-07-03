@@ -23,7 +23,7 @@ namespace eLibrary.WPF
         {
             _modalNavigationStore = new ModalNavigationStore();
             _booksStore = new BooksStore();
-            _selectedBookStore = new SelectedBookStore();
+            _selectedBookStore = new SelectedBookStore(_booksStore);
         }
 
         protected override void OnStartup(StartupEventArgs e)
