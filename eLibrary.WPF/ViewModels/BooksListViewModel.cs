@@ -14,14 +14,14 @@ namespace eLibrary.WPF.ViewModels
     public class BooksListViewModel : ViewModelBase
     {
         private readonly SelectedBookStore _selectedBookStore;
-
-        private readonly ObservableCollection<ListingItemViewModel> _listingItemViewModel;
         private readonly BooksStore _booksStore;
         private readonly ModalNavigationStore _modalNavigationStore;
+        private readonly ResearchStore _researchStore;
 
-        //Using an ObservableCollection the UI can immediately update when an item is add or removed
-
+        private readonly ObservableCollection<ListingItemViewModel> _listingItemViewModel;
         public IEnumerable<ListingItemViewModel> ListingItemViewModel => _listingItemViewModel;
+        private ObservableCollection<ListingItemViewModel> _listingItemViewModelFiltered;
+        public IEnumerable<ListingItemViewModel> ListingItemViewModelFiltered => _listingItemViewModelFiltered;
 
         private ListingItemViewModel _selectedBooksListItemViewModel;
         public ListingItemViewModel SelectedBooksListItemViewModel
@@ -38,21 +38,26 @@ namespace eLibrary.WPF.ViewModels
             }
         }
 
-        public BooksListViewModel(BooksStore booksStore, SelectedBookStore selectedBookStore, ModalNavigationStore modalNavigationStore)
+        public BooksListViewModel(BooksStore booksStore, SelectedBookStore selectedBookStore, ModalNavigationStore modalNavigationStore, ResearchStore researchStore)
         {
             _selectedBookStore = selectedBookStore;
             _listingItemViewModel = new ObservableCollection<ListingItemViewModel>();
+            _listingItemViewModelFiltered = new ObservableCollection<ListingItemViewModel>();
             _booksStore = booksStore;
             _modalNavigationStore = modalNavigationStore;
+            _researchStore = researchStore;
 
             //Events subscription
             _booksStore.BookAdded += BooksStore_BookAdded; 
             _booksStore.BookUpdated += BooksStore_BookUpdated;
             _booksStore.BookDeleted += BooksStore_BookDeleted;
+            _researchStore.ResearchChanged += ResearchStore_ResearchChanged;
 
             AddBook(new Book(Guid.NewGuid(), "Madame Bovary", "Gustave Flaubert", "1856", "Francese"));
             AddBook(new Book(Guid.NewGuid(), "Dracula", "Bram Stoker", "1897", "Inglese"));
             AddBook(new Book(Guid.NewGuid(), "L'isola del Tesoro", "Robert Louis Stevenson", "1883", "Inglese"));
+
+            ResetFilter();
 
         }
 
@@ -62,12 +67,14 @@ namespace eLibrary.WPF.ViewModels
             _booksStore.BookAdded -= BooksStore_BookAdded;
             _booksStore.BookUpdated -= BooksStore_BookUpdated;
             _booksStore.BookDeleted -= BooksStore_BookDeleted;
+            _researchStore.ResearchChanged -= ResearchStore_ResearchChanged;
             base.Dispose();
         }
 
         private void BooksStore_BookAdded(Book book)
         {
             AddBook(book);
+            ApplyFilter();
         }
 
         private void BooksStore_BookUpdated(Book book)
@@ -79,6 +86,7 @@ namespace eLibrary.WPF.ViewModels
             if (listingItemViewModel != null)
             {
                 listingItemViewModel.Update(book);
+                ApplyFilter();
             }
             
         }
@@ -91,7 +99,13 @@ namespace eLibrary.WPF.ViewModels
             if (listingItemViewModel != null)
             {
                 DeleteBook(book);
+                ApplyFilter();
             }
+        }
+
+        private void ResearchStore_ResearchChanged()
+        {
+            ApplyFilter();
         }
 
         private void AddBook(Book book)
@@ -103,6 +117,32 @@ namespace eLibrary.WPF.ViewModels
         private void DeleteBook(Book book)
         {
             _listingItemViewModel.Remove(_listingItemViewModel.FirstOrDefault(y => y.Book.Id == book.Id));
+        }
+
+        private void ResetFilter()
+        {
+            _listingItemViewModelFiltered.Clear();
+            foreach (ListingItemViewModel item in _listingItemViewModel)
+            {
+                _listingItemViewModelFiltered.Add(item);
+            }
+        }
+
+        private void ApplyFilter()
+        {
+            if (String.IsNullOrEmpty(_researchStore.Research.ToString()))
+            {
+                ResetFilter();
+            }
+            else
+            {
+                var temp = _listingItemViewModel.Where(elem => elem.Title.Contains(_researchStore.Research, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                _listingItemViewModelFiltered.Clear();
+                foreach (var item in temp)
+                {
+                    _listingItemViewModelFiltered.Add(item);
+                }
+            }
         }
 
     }

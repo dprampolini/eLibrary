@@ -23,7 +23,7 @@
                 <ListView 
                     BorderThickness="0" 
                     SelectedItem="{Binding SelectedBooksListItemViewModel}"  
-                    ItemsSource="{Binding ListingItemViewModel}">
+                    ItemsSource="{Binding ListingItemViewModelFiltered}">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
