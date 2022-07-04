@@ -23,11 +23,19 @@
                 <!-- Button column -->
             </Grid.ColumnDefinitions>
             
-            <TextBlock 
+            <!-- TextBlock 
                 Grid.Column="0" 
                 Text="eLibrary" 
-                Style="{StaticResource PageHeader}" />
-            
+                Style="{StaticResource PageHeader}" / -->
+            <Image 
+                    Grid.Column="0" 
+                    Width="100"
+                    Margin="0 0 0 0" >
+                <Image.Source>
+                    <BitmapImage  UriSource="/Images/Logo.png" />
+                </Image.Source>
+            </Image>
+
             <components:SearchBox 
                 Grid.Column="1" 
                 Margin="25 0 250 0"
