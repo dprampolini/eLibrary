@@ -30,7 +30,7 @@
             <Image 
                     Grid.Column="0" 
                     Width="100"
-                    Margin="0 0 0 0" >
+                    Margin="20 0 0 0" >
                 <Image.Source>
                     <BitmapImage  UriSource="/Images/Logo.png" />
                 </Image.Source>
@@ -38,7 +38,7 @@
 
             <components:SearchBox 
                 Grid.Column="1" 
-                Margin="25 0 250 0"
+                Margin="20 0 0 0"
                 DataContext="{Binding SearchBoxViewModel}" />
             
             <Button 
@@ -46,7 +46,7 @@
                 Content="Add" 
                 FontSize="16" 
                 Command="{Binding AddBookCommand}"
-                Margin="250 0 0 0"/>
+                Margin="200 0 0 0"/>
         </Grid>
 
         <Grid Grid.Row="1" Margin="0 20 0 0">

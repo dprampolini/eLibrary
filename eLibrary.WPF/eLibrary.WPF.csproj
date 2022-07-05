@@ -5,6 +5,8 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <StartupObject>eLibrary.WPF.App</StartupObject>
+    <AssemblyName>eLibrary</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
