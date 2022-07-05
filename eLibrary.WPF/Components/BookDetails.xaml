@@ -27,7 +27,7 @@
                     </Grid.Style>
                     <TextBlock
                         Grid.Row="0"
-                        FontSize="24" 
+                        FontSize="16" 
                         Text="Selezionare un libro per visualizzarne i dettagli."
                         TextWrapping="WrapWithOverflow"/>
                 </Grid>
